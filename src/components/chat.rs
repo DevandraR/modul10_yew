@@ -45,6 +45,7 @@ pub struct Chat {
     _producer: Box<dyn Bridge<EventBus>>,
     wss: WebsocketService,
     messages: Vec<MessageData>,
+    message_count: usize,
 }
 impl Component for Chat {
     type Message = Msg;
@@ -78,6 +79,7 @@ impl Component for Chat {
             chat_input: NodeRef::default(),
             wss,
             _producer: EventBus::bridge(ctx.link().callback(Msg::HandleMsg)),
+            message_count: 0,
         }
     }
 
@@ -105,6 +107,7 @@ impl Component for Chat {
                         let message_data: MessageData =
                             serde_json::from_str(&msg.data.unwrap()).unwrap();
                         self.messages.push(message_data);
+                        self.message_count += 1;
                         return true;
                     }
                     _ => {
@@ -163,7 +166,9 @@ impl Component for Chat {
                     }
                 </div>
                 <div class="grow h-screen flex flex-col">
-                    <div class="w-full h-14 border-b-2 border-gray-300"><div class="text-xl p-3">{"💬 Chat!"}</div></div>
+                    <div class="w-full h-14 border-b-2 border-gray-300"><div class="text-xl p-3">{"💬 Chat!"}</div>
+                    <div>{format!("Messages sent: {}", self.message_count)}</div>
+                    </div>
                     <div class="w-full grow overflow-auto border-b-2 border-gray-300">
                         {
                             self.messages.iter().map(|m| {
@@ -190,6 +195,7 @@ impl Component for Chat {
 
                     </div>
                     <div class="w-full h-14 flex px-3 items-center">
+                        
                         <input ref={self.chat_input.clone()} type="text" placeholder="Message" class="block w-full py-2 pl-4 mx-3 bg-gray-100 rounded-full outline-none focus:text-gray-700" name="message" required=true />
                         <button onclick={submit} class="p-3 shadow-sm bg-blue-600 w-10 h-10 rounded-full flex justify-center items-center color-white">
                             <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" class="fill-white">

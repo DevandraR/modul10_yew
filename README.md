@@ -15,3 +15,10 @@
 <h3>Terminal Server</h3>
 
 ![terminal server](img/terminalServer.png)
+
+# 3.2. Add some creativites to the web client
+
+<h3>Add Some Creativity</h3>
+Telah ditambahkan counter untuk jumlah chat pada halaman chat utama, namun hanya bisa dilihat orang baik
+
+![editan sendiri](img/creativity-1.png)
